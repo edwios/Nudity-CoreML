@@ -8,17 +8,30 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        self.imageView.image = image
+        self.checkImage(image!)
+    }
+    
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var percentage: UILabel!
+    var imagePicker: ImagePicker!
+
+    @IBAction func showImagePicker(_ sender: UIButton) {
+        self.imagePicker.present(from: sender)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
+    }
+    
+    func checkImage(_ image: UIImage) {
         let model = Nudity()
         let size = CGSize(width: 224, height: 224)
-        let image = #imageLiteral(resourceName: "fake")
 
         guard let buffer = image.resize(to: size)?.pixelBuffer() else {
             fatalError("Scaling or converting to pixel buffer failed!")
